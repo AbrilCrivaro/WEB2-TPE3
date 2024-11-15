@@ -3,7 +3,7 @@ require_once './app/models/artist.model.php';
 require_once './app/models/song.model.php';
 require_once './app/views/json.view.php';
 
-class topApiController {
+class SongsApiController {
     private $songModel;
     private $artistModel;
     private $view;
@@ -14,9 +14,30 @@ class topApiController {
         $this->view = new JSONView();
     }
 
-    public function getAll($req, $res) {
-        $songs = $this->songModel->getAllSongs();
+    public function getAllSongs($req, $res) {
 
+        $sort = null;
+        if(isset($req->query->sort)){
+            $sort = $req->query->sort;
+        }
+
+        $order = null;
+        if(isset($req->query->order)){
+            $order = $req->query->order;
+        }
+
+        $page = isset($req->query->page) ? (int)$req->query->page : 1;
+        $limit = isset($req->query->limit) ? (int)$req->query->limit : 10; 
+        $offset = ($page - 1) * $limit;
+
+
+        $songs = $this->songModel->getAllSongs($sort, $order, $limit, $offset);
+
+        if($songs == null){
+            return $this->view->response('datos erroneos', 400);
+        }
+
+    
         foreach ($songs as $song) {
             $song->artist = $this->artistModel->getArtistById($song->id_artist);
         }
@@ -24,7 +45,7 @@ class topApiController {
         return $this->view->response($songs);
     }
 
-    public function get($req, $res){
+    public function getSong($req, $res){
         $id = $req->params->id;
 
         $song = $this->songModel->getSongById($id);
@@ -32,7 +53,7 @@ class topApiController {
         return $this->view->response($song);
     }
 
-    public function create($req, $res){
+    public function createSong($req, $res){
 
         if (empty($req->body->artist_name) || empty($req->body->artist_nationality) || empty($req->body->img_artist) || empty($req->body->description)) {
             return $this->view->response('Faltan completar datos', 400);
@@ -57,7 +78,7 @@ class topApiController {
         return $this->view->response($artist, 201);
     }
 
-public function update($req, $res){
+public function updateSong($req, $res){
 
     if (empty($req->params->id) || empty($req->body->song_name) || empty($req->body->date) || empty($req->body->views) || empty($req->body->lyrics)) { 
         return $this->view->response('Faltan completar datos', 400);
@@ -77,7 +98,7 @@ public function update($req, $res){
     
 }
 
-    public function delete($req, $res) {
+    public function deleteSong($req, $res) {
         if (empty($req->params->id)) {
             return $this->view->response('Falta completar el ID de la canción', 400);
         }

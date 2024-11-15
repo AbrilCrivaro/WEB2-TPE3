@@ -4,10 +4,56 @@ require_once 'app/models/model.php';
 
 class SongModel extends Model{
 
-    public function getAllSongs() {
-        $query = $this->db->prepare("SELECT * FROM songs ORDER BY views DESC");
+    public function getAllSongs($sort = false, $order = false, $limit = 10, $offset = 0) {
+
+        $sql = 'SELECT * FROM songs';
+
+        if($sort) {
+            switch(strtolower($sort)) {
+                case 'views':
+                    $sql .= ' ORDER BY views';
+                    break;
+                case 'release_date':
+                    $sql .= ' ORDER BY release_date';
+                    break;
+                case 'song_name':
+                    $sql .= ' ORDER BY song_name';
+                    break;
+                case 'id_artist':
+                    $sql .= ' ORDER BY id_artist';
+                break;
+                case 'lyrics_song':
+                    $sql .= ' ORDER BY lyrics_song';
+                break;
+                case 'id_song':
+                    $sql .= ' ORDER BY id_song';
+                break;
+                default:
+                return;
+            }
+            if ($order) {
+                switch (strtoupper($order)) {
+                    case 'DESC':
+                        $sql .= ' DESC';
+                        break;
+                    case 'ASC':
+                        $sql .= ' ASC';
+                        break;
+                }
+            }
+        }
+
+        $sql .= " LIMIT :limit OFFSET :offset";
+
+
+        $query = $this->db->prepare($sql);
+        $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $query->bindValue(':offset', $offset, PDO::PARAM_INT);
         $query->execute();
-        return $query->fetchAll(PDO::FETCH_OBJ);
+
+        $songs = $query->fetchAll(PDO::FETCH_OBJ);
+
+        return $songs;
     }
 
     public function getSongById($id) {
