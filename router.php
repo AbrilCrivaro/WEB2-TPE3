@@ -2,6 +2,7 @@
     
     require_once 'libs/router.php';
     require_once 'app/controllers/songs.api.controller.php';
+    require_once 'app/controllers/artists.api.controller.php';
     require_once 'config.php';
     
     $router = new Router();
@@ -19,11 +20,11 @@
     # Artist router
 
     #                 endpoint          verbo            controller                  metodo
-    $router->addRoute('artists',        'GET'   ,   'ArtistApiController',       'getAllArtist');
-    $router->addRoute('artists/:id',    'GET'   ,   'ArtistApiController',       'getArtist'   );
-    $router->addRoute('artists/:id',    'DELETE',   'ArtistApiController',       'deleteArtist');
-    $router->addRoute('artists',        'POST'  ,   'ArtistApiController',       'createArtist');
-    $router->addRoute('artists/:id',    'PUT'   ,   'ArtistApiController',       'updateArtist');
+    $router->addRoute('artists',        'GET'   ,   'ArtistsApiController',       'getAllArtists');
+    $router->addRoute('artists/:id',    'GET'   ,   'ArtistsApiController',       'getArtist'   );
+    $router->addRoute('artists/:id',    'DELETE',   'ArtistsApiController',       'deleteArtist');
+    $router->addRoute('artists',        'POST'  ,   'ArtistsApiController',       'createArtist');
+    $router->addRoute('artists/:id',    'PUT'   ,   'ArtistsApiController',       'updateArtist');
 
      $router->route($_GET['resource'], $_SERVER['REQUEST_METHOD']);
 

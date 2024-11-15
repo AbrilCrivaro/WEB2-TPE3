@@ -4,9 +4,14 @@ require_once 'app/models/model.php';
 
 class SongModel extends Model{
 
-    public function getAllSongs($sort = false, $order = false, $limit = 10, $offset = 0) {
+    public function getAllSongs($filter = false, $sort = false, $order = false, $limit = 10, $offset = 0) {
 
         $sql = 'SELECT * FROM songs';
+
+        if($filter != null) {
+            $sql .= " WHERE id_artist = :filter";
+        }
+
 
         if($sort) {
             switch(strtolower($sort)) {
@@ -42,16 +47,19 @@ class SongModel extends Model{
                 }
             }
         }
-
+        
         $sql .= " LIMIT :limit OFFSET :offset";
 
-
         $query = $this->db->prepare($sql);
-        $query->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $query->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $query->bindValue(':offset', $offset, PDO::PARAM_INT);
+        if($filter != null){
+            $query->bindValue(':filter', $filter, PDO::PARAM_INT);
+        }
         $query->execute();
 
         $songs = $query->fetchAll(PDO::FETCH_OBJ);
+
 
         return $songs;
     }
@@ -64,25 +72,21 @@ class SongModel extends Model{
         return $song;
     }
 
+    public function getSongByName($id_artist, $song_name){
+
+        $query = $this->db->prepare("SELECT * FROM songs WHERE id_artist = ? AND song_name = ?");
+        $query->execute([$id_artist, $song_name]);
+        $exist_song = $query->fetch(PDO::FETCH_OBJ);
+
+        return $exist_song;
+    }
+
     public function getSongByArtist($id){
         $query = $this->db->prepare("SELECT * FROM songs WHERE id_artist = ?");
         $query->execute([$id]);
         $songartists = $query->fetchAll(PDO::FETCH_OBJ);
 
         return $songartists;
-    }
-
-    public function getSongsOptions(){
-        $query = $this->db->prepare("SELECT id_song, song_name FROM songs");
-        $query->execute();
-
-
-        $options = "";
-        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $options .= "<option value='" . $row['id_song'] . "'>" . $row['song_name'] . "</option>";
-        }
-
-        return $options;
     }
 
     public function insertSong($song_name, $date, $views, $artist_id, $lyrics) { 

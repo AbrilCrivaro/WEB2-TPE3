@@ -12,10 +12,52 @@ class ArtistModel extends Model{
         $this->songModel = new SongModel();
     }
 
-    public function getAllArtists() {
-        $query = $this->db->prepare('SELECT * FROM artists');
+    public function getAllArtists($filter = false, $sort = false, $order = false, $limit = 10, $offset = 0) {
+
+        $sql = 'SELECT * FROM artists';
+
+        if($filter != null) {
+            $sql .= " WHERE artist_nationality = :filter";
+        }
+
+
+        if($sort) {
+            switch(strtolower($sort)) {
+                case 'artist_name':
+                    $sql .= ' ORDER BY artist_name';
+                    break;
+                case 'artist_nationality':
+                    $sql .= ' ORDER BY artist_nationality';
+                    break;
+                default:
+                return;
+            }
+            if ($order) {
+                switch (strtoupper($order)) {
+                    case 'DESC':
+                        $sql .= ' DESC';
+                        break;
+                    case 'ASC':
+                        $sql .= ' ASC';
+                        break;
+                }
+            }
+        }
+        
+        $sql .= " LIMIT :limit OFFSET :offset";
+
+        $query = $this->db->prepare($sql);
+            $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $query->bindValue(':offset', $offset, PDO::PARAM_INT);
+        if($filter != null){
+            $query->bindValue(':filter', $filter, PDO::PARAM_INT);
+        }
         $query->execute();
-        return $query->fetchAll(PDO::FETCH_OBJ);
+
+        $artists = $query->fetchAll(PDO::FETCH_OBJ);
+
+
+        return $artists;
     }
 
     public function getArtistById($id_artist) {
@@ -23,19 +65,6 @@ class ArtistModel extends Model{
         $query->execute([$id_artist]);
         $artist = $query->fetch(PDO::FETCH_OBJ);
         return $artist;
-    }
-
-    public function getArtistOptions(){
-        $query = $this->db->prepare("SELECT id_artist, artist_name FROM artists");
-        $query->execute();
-
-
-        $options = "";
-        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $options .= "<option value='" . $row['id_artist'] . "'>" . $row['artist_name'] . "</option>";
-        }
-
-        return $options;
     }
 
     public function insertArtist($artist_name, $nationality, $img_artist, $description) { 
