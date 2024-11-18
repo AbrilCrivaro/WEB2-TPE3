@@ -50,7 +50,7 @@ class ArtistModel extends Model{
             $query->bindValue(':limit', $limit, PDO::PARAM_INT);
             $query->bindValue(':offset', $offset, PDO::PARAM_INT);
         if($filter != null){
-            $query->bindValue(':filter', $filter, PDO::PARAM_INT);
+            $query->bindValue(':filter', $filter, PDO::PARAM_STR);
         }
         $query->execute();
 
