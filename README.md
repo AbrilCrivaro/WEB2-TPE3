@@ -10,14 +10,14 @@ En este repositorio subiremos todos los archivos correspondientes con el Trabajo
 ## Descripción
 
 Este proyecto forma parte de la tercera entrega del Trabajo Práctico Especial (TPE) de la carrera TUDAI. Es un servicio web de tipo RESTFul de una base de datos con las tablas de Canciones (songs) y artistas (artists) las cuales tienen una relacion de 1 a N 
-que es reprensentada con un artista que tiene varias canciones.
+que es representada con un artista que tiene varias canciones.
 
 Se cumplen los siguientes requerimientos obligatorios y opcionales:
 
 - La API Rest es RESTful
-- tiene 2 servicios que listan (GET) una colección entera de entidades (GetArtists que lista todos los artistas y GetSongs que lista todas las canciones). ambos servicios pueden ordenarce por cualquiera de sus campos tanto ascencente como descendente.
+- tiene 2 servicios que listan (GET) una colección entera de entidades (GetArtists que lista todos los artistas y GetSongs que lista todas las canciones). ambos servicios pueden ordenarse por cualquiera de sus campos tanto ascencente como descendente.
 - Ambas listas tienen un servicio que liste (GET) por ID una entidad determinada.
-- Tiene 2 servicios para agregar modificar y eliminar datos (POST PUT y DELETE) de cualquiera de las tablas mencionadas.
+- Tiene 2 servicios para agregar, modificar y eliminar datos (POST PUT y DELETE) de cualquiera de las tablas mencionadas.
 - La API Rest maneja de manera adecuada los siguientes códigos de error (200, 201, 400 y 404).
 - Consta de paginacion sobre todos los servicios que listen una coleccion entera de entidades, tambien ambos servicios de listado de colecciones pueden filtrarse, canciones puede ser filtrado por su artista, y artistas puede ser filtrado por su nacionalidad.
 - Todo el sistema usa el patrón MVC.
@@ -64,7 +64,7 @@ Se cumplen los siguientes requerimientos obligatorios y opcionales:
 - ### GET `<<BaseUrl>>/api/songs`
 
   -  ### Descripción:
-Lista la coleccion entera "songs" disponibles en la base datos, permitiendo aplicar tanto filtros, ordenamiento y paginado de la lista resultante.
+Lista la coleccion entera "songs" disponibles en la base de datos, permitiendo aplicar tanto filtros, ordenamiento y paginado de la lista resultante.
 
   - #### Ejemplo:
 
@@ -98,7 +98,7 @@ Para obtener todos las canciones ordenados por reproducciones en orden descenden
 GET <<BaseUrl>>/api/songs?sort=views&order=desc
 ```
 
-Para obtener todas las canciones ordenados por reproducciones en orden pordefecto:
+Para obtener todas las canciones ordenados por reproducciones en orden por defecto:
 
 ```http
 GET <<BaseUrl>>/api/songs?sort=views
@@ -138,7 +138,7 @@ GET <<BaseUrl>>/api/songs?page=3&limit=5
 
 #### Ejemplo de una conbinacion entre filtro, ordenamiento y paginacion:
 
-Para obtener la página 2 (páginas con 2 elementos) del listado de canciones(songs) que ordenados por cantidad de reproducciones en order ascendete de un determinado artista cuya id sea 8:
+Para obtener la página 2 (páginas con 2 elementos) del listado de canciones(songs) ordenados por cantidad de reproducciones en orden ascendente de un determinado artista cuya id sea 8:
 
 ```http
 GET <<BaseUrl>>/api/songs?sort=views&order=asc&filter=8&page=2&limit=2
@@ -184,18 +184,18 @@ El campo `id_song` se genera automáticamente y no debe incluirse en el JSON.
 
 - ## PUT `<<BaseUrl>>/api/songs/:ID`
 
-Modifica una entidad determinada por id_song solicitado, los datos a solucitar son los mismos que para publicar una cancion.
+Modifica una entidad determinada por id_song solicitado, los datos a solicitar son los mismos que para publicar una cancion.
 
-- ## PUT `<<BaseUrl>>/api/songs/:ID`
+- ## DELETE `<<BaseUrl>>/api/songs/:ID`
 
 Elimina una entidad determinada por id_song solicitado.
 
 ## artistas (artists)
 
-- ### GET `<<BaseUrl>>/api/artist`
+- ### GET `<<BaseUrl>>/api/artists`
 
   -  ### Descripción:
-Lista la coleccion entera "artists" disponibles en la base datos, permitiendo aplicar tanto filtros, ordenamiento y paginado de la lista resultante.
+Lista la coleccion entera "artists" disponibles en la base de datos, permitiendo aplicar tanto filtros, ordenamiento y paginado de la lista resultante.
 
   - #### Ejemplo:
 
@@ -219,13 +219,13 @@ GET <<BaseUrl>>/api/artists
     - **desc** : Orden descendente.
         
 #### Ejemplo de Ordenamiento:
-Para obtener todos las artista ordenados por su nacionaldad en ascendete:
+Para obtener todos las artista ordenados por su nacionaldad en orden descendente:
 
 ```http
-GET <<BaseUrl>>/api/artists?sort=artist_nationality&order=asc
+GET <<BaseUrl>>/api/artists?sort=artist_nationality&order=desc
 ```
 
-Para obtener todos los artistas ordenados por nacionalidad en orden pordefecto:
+Para obtener todos los artistas ordenados por nacionalidad en orden por defecto:
 
 ```http
 GET <<BaseUrl>>/api/artists?sort=artist_nationality
@@ -260,12 +260,12 @@ GET <<BaseUrl>>/api/artists?page=3
 Devolver página 4 con 5 resultados por página:
 
 ```http
-GET <<BaseUrl>>/api/artists?page=3&limit=5
+GET <<BaseUrl>>/api/artists?page=4&limit=5
 ```
 
 #### Ejemplo de una conbinacion entre filtro, ordenamiento y paginacion:
 
-Para obtener la página 2 (páginas con 2 elementos) del listado de artistas(artists) que ordenados por su nombre en order descendente de una determinada nacionalidad en este caso USA :
+Para obtener la página 2 (páginas con 2 elementos) del listado de artistas(artists) ordenados por su nombre en orden descendente de una determinada nacionalidad en este caso USA :
 
 ```http
 GET <<BaseUrl>>/api/artists?sort=artist_name&order=desc&filter=USA&page=2&limit=2
@@ -309,9 +309,9 @@ El campo `id_artist` se genera automáticamente y no debe incluirse en el JSON.
 
 - ## PUT `<<BaseUrl>>/api/artists/:ID`
 
-Modifica una entidad determinada por id_artist solicitado, los datos a solucitar son los mismos que para publicar un artista.
+Modifica una entidad determinada por id_artist solicitado, los datos a solicitar son los mismos que para publicar un artista.
 
-- ## PUT `<<BaseUrl>>/api/artists/:ID`
+- ## DELETE `<<BaseUrl>>/api/artists/:ID`
 
 Elimina una entidad determinada por id_artist solicitado.
 
